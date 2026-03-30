@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Looped & Hooked</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="login-body">
+    <main class="login-wrapper">
+        <section class="register-card">
+            <div class="register-left">
+                <div class="register-left-overlay">
+                    <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="register-logo">
+                    <div class="register-left-textbox">
+                        <p class="register-small-title">ÚNETE A LA COMUNIDAD</p>
+                        <h1>Crea tu cuenta</h1>
+                        <p class="register-description">
+                            Forma parte de un espacio donde la creatividad artesanal, 
+                            los detalles únicos y el talento hecho a mano cobra vida.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="register-right">
+                <div class="register-form-box">
+                    <h2>Registro de usuario</h2>
+                    <p class="login-text">
+                        Completa tus datos para empezar en Looped & Hooked.
+                    </p>
+
+                    <form class="register-form" onsubmit="registrarUsuario(event)">
+                        <select id="tipoUsuario" onchange="mostrarCamposArtista()" required>
+                            <option value="">Tipo de usuario</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="artista">Artista</option>
+                        </select>
+
+                        <input type="text" id="nombre" placeholder="Nombre completo" required>
+                        <input type="text" id="cedula" placeholder="Número de cédula" required>
+                        <input type="email" id="correo" placeholder="Correo electrónico" required>
+                        <input type="text" id="usuario" placeholder="Nombre de usuario" required>
+                        <input type="text" id="telefono" placeholder="Número de teléfono" required>
+                        <input type="password" id="password" placeholder="Contraseña" required>
+
+                        <div id="camposArtista" class="artist-box" style="display: none;">
+                            <h3>Datos del artista</h3>
+                            <input type="text" id="especialidad" placeholder="Especialidad (peluches, ropa, accesorios)">
+                            <input type="number" id="materiales" placeholder="Materiales">
+                            <input type="number" id="manoObra" placeholder="Mano de obra">
+                            <input type="number" id="herramientas" placeholder="Herramientas">
+                            <input type="number" id="empaque" placeholder="Empaque">
+                        </div>
+
+                        <button type="submit" class="btn-login">Crear cuenta</button>
+                    </form>
+
+                    <div class="register-box">
+                        <p>¿Ya tienes una cuenta?</p>
+                        <a href="login.html" class="btn-register">Volver al login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function mostrarCamposArtista() {
+            let tipo = document.getElementById("tipoUsuario").value;
+            let campos = document.getElementById("camposArtista");
+
+            if (tipo === "artista") {
+                campos.style.display = "block";
+            } else {
+                campos.style.display = "none";
+            }
+        }
+
+        function registrarUsuario(event) {
+            event.preventDefault();
+
+            let usuario = {
+                tipo: document.getElementById("tipoUsuario").value,
+                nombre: document.getElementById("nombre").value,
+                cedula: document.getElementById("cedula").value,
+                correo: document.getElementById("correo").value,
+                usuario: document.getElementById("usuario").value,
+                telefono: document.getElementById("telefono").value,
+                password: document.getElementById("password").value,
+                especialidad: document.getElementById("especialidad").value,
+                materiales: document.getElementById("materiales").value,
+                manoObra: document.getElementById("manoObra").value,
+                herramientas: document.getElementById("herramientas").value,
+                empaque: document.getElementById("empaque").value
+            };
+
+            let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+            let existe = usuarios.find(function (u) {
+                return u.usuario.toLowerCase() === usuario.usuario.toLowerCase();
+            });
+
+            if (existe) {
+                alert("Ese nombre de usuario ya existe");
+                return;
+            }
+
+            usuarios.push(usuario);
+            localStorage.setItem("usuarios", JSON.stringify(usuarios));
+            alert("Usuario registrado correctamente");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

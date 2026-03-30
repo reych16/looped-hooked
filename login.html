@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Looped & Hooked</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="login-body">
+    <main class="login-wrapper">
+        <section class="login-card">
+
+            <!-- Panel Izquierdo -->
+            <div class="login-left">
+                <div class="login-left-content">
+                    <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="login-logo">
+                    <h1>Descubre Looped & Hooked</h1>
+                    <p class="login-left-text">
+                        Descubre un espacio donde la creatividad y el trabajo hecho a mano
+    se trans            forman en piezas únicas, creadas con dedicación y detalle.
+                    </p>
+                    <div class="login-illustration">
+                        <img src="img/login_shopping.svg" class="hero-illustration">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Derecho -->
+            <div class="login-right">
+                <div class="login-form-box">
+                    <h2>Iniciar sesión</h2>
+                    <p class="login-text">
+                        Accede a tu cuenta para explorar Looped & Hooked.
+                    </p>
+
+                    <form class="login-form" onsubmit="loginUsuario(event)">
+                        <input type="text" id="loginUsuario" placeholder="Nombre de usuario" required>
+                        <input type="password" id="loginPassword" placeholder="Contraseña" required>
+
+                        <div class="login-options">
+                            <label>
+                                <input type="checkbox">
+                                Recordarme
+                            </label>
+                            <a href="#">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <button type="submit" class="btn-login">Ingresar</button>
+                    </form>
+
+                    <p id="mensajeLogin"></p>
+
+                    <div class="separator">
+                        <span>o</span>
+                    </div>
+
+                    <div class="register-box">
+                        <p>¿No tienes una cuenta?</p>
+                        <a href="registro.html" class="btn-register">Crear cuenta</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function loginUsuario(event) {
+            event.preventDefault();
+
+            let usuario = document.getElementById("loginUsuario").value;
+            let password = document.getElementById("loginPassword").value;
+            let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+            let mensaje = document.getElementById("mensajeLogin");
+
+            mensaje.textContent = "";
+
+            if (!usuarios) {
+                mensaje.textContent = "No hay usuarios registrados."
+                return;
+            }
+
+            for (let i = 0; i < usuarios.length; i++) {
+                if (usuarios[i].usuario == usuario && usuarios[i].password == password) {
+                    alert("Login correcto");
+                    window.location.assign("index.html");
+                    return;
+                }
+            }
+            mensaje.textContent = "Usuario o contraseña incorrectos.";
+        }
+    </script>
+</body>
+</html>
