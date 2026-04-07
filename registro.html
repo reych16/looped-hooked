@@ -18,7 +18,7 @@
                         <p class="register-small-title">ÚNETE A LA COMUNIDAD</p>
                         <h1>Crea tu cuenta</h1>
                         <p class="register-description">
-                            Forma parte de un espacio donde la creatividad artesanal, 
+                            Forma parte de un espacio donde la creatividad artesanal,
                             los detalles únicos y el talento hecho a mano cobra vida.
                         </p>
                     </div>
@@ -48,7 +48,8 @@
 
                         <div id="camposArtista" class="artist-box" style="display: none;">
                             <h3>Datos del artista</h3>
-                            <input type="text" id="especialidad" placeholder="Especialidad (peluches, ropa, accesorios)">
+                            <input type="text" id="especialidad"
+                                placeholder="Especialidad (peluches, ropa, accesorios)">
                             <input type="number" id="materiales" placeholder="Materiales">
                             <input type="number" id="manoObra" placeholder="Mano de obra">
                             <input type="number" id="herramientas" placeholder="Herramientas">
@@ -82,12 +83,12 @@
         function registrarUsuario(event) {
             event.preventDefault();
 
-            let usuario = {
+            let datos = {
                 tipo: document.getElementById("tipoUsuario").value,
                 nombre: document.getElementById("nombre").value,
                 cedula: document.getElementById("cedula").value,
                 correo: document.getElementById("correo").value,
-                usuario: document.getElementById("usuario").value,
+                username: document.getElementById("usuario").value,
                 telefono: document.getElementById("telefono").value,
                 password: document.getElementById("password").value,
                 especialidad: document.getElementById("especialidad").value,
@@ -97,21 +98,43 @@
                 empaque: document.getElementById("empaque").value
             };
 
-            let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-            let existe = usuarios.find(function (u) {
-                return u.usuario.toLowerCase() === usuario.usuario.toLowerCase();
-            });
+            fetch("registro.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body:
+                    "tipo=" + encodeURIComponent(datos.tipo) +
+                    "&nombre=" + encodeURIComponent(datos.nombre) +
+                    "&cedula=" + encodeURIComponent(datos.cedula) +
+                    "&correo=" + encodeURIComponent(datos.correo) +
+                    "&username=" + encodeURIComponent(datos.username) +
+                    "&telefono=" + encodeURIComponent(datos.telefono) +
+                    "&password=" + encodeURIComponent(datos.password) +
+                    "&especialidad=" + encodeURIComponent(datos.especialidad) +
+                    "&materiales=" + encodeURIComponent(datos.materiales) +
+                    "&manoObra=" + encodeURIComponent(datos.manoObra) +
+                    "&herramientas=" + encodeURIComponent(datos.herramientas) +
+                    "&empaque=" + encodeURIComponent(datos.empaque)
+            })
+                .then(response => response.text())
+                .then(data => {
 
-            if (existe) {
-                alert("Ese nombre de usuario ya existe");
-                return;
-            }
+                    console.log("Respuesta:", data);
 
-            usuarios.push(usuario);
-            localStorage.setItem("usuarios", JSON.stringify(usuarios));
-            alert("Usuario registrado correctamente");
-            window.location.href = "login.html";
+                    if (data.trim() === "OK") {
+                        alert("Usuario registrado correctamente ✅");
+                        window.location.href = "login.html";
+                    } else {
+                        alert(data);
+                    }
+
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
         }
     </script>
 </body>
+
 </html>

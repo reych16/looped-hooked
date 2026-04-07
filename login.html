@@ -19,7 +19,7 @@
                     <h1>Descubre Looped & Hooked</h1>
                     <p class="login-left-text">
                         Descubre un espacio donde la creatividad y el trabajo hecho a mano
-    se trans            forman en piezas únicas, creadas con dedicación y detalle.
+                        se trans forman en piezas únicas, creadas con dedicación y detalle.
                     </p>
                     <div class="login-illustration">
                         <img src="img/login_shopping.svg" class="hero-illustration">
@@ -35,20 +35,14 @@
                         Accede a tu cuenta para explorar Looped & Hooked.
                     </p>
 
-                    <form class="login-form" onsubmit="loginUsuario(event)">
+                    <form class="login-form" id="loginForm">
                         <input type="text" id="loginUsuario" placeholder="Nombre de usuario" required>
                         <input type="password" id="loginPassword" placeholder="Contraseña" required>
 
-                        <div class="login-options">
-                            <label>
-                                <input type="checkbox">
-                                Recordarme
-                            </label>
-                            <a href="#">¿Olvidaste tu contraseña?</a>
-                        </div>
-
                         <button type="submit" class="btn-login">Ingresar</button>
                     </form>
+
+                    <p id="mensajeLogin"></p>
 
                     <p id="mensajeLogin"></p>
 
@@ -66,30 +60,43 @@
     </main>
 
     <script>
-        function loginUsuario(event) {
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            console.log("SE EJECUTA LOGIN"); // prueba
+
             event.preventDefault();
 
             let usuario = document.getElementById("loginUsuario").value;
             let password = document.getElementById("loginPassword").value;
-            let usuarios = JSON.parse(localStorage.getItem("usuarios"));
             let mensaje = document.getElementById("mensajeLogin");
 
             mensaje.textContent = "";
 
-            if (!usuarios) {
-                mensaje.textContent = "No hay usuarios registrados."
-                return;
-            }
+            fetch("login.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "username=" + encodeURIComponent(usuario) +
+                    "&password=" + encodeURIComponent(password)
+            })
+                .then(response => response.text())
+                .then(data => {
 
-            for (let i = 0; i < usuarios.length; i++) {
-                if (usuarios[i].usuario == usuario && usuarios[i].password == password) {
-                    alert("Login correcto");
-                    window.location.assign("index.html");
-                    return;
-                }
-            }
-            mensaje.textContent = "Usuario o contraseña incorrectos.";
-        }
+                    console.log("Respuesta:", data);
+
+                    if (data.trim() === "OK") {
+                        alert("Login correcto ✅");
+                        window.location.href = "index.html";
+                    } else {
+                        mensaje.textContent = "Usuario o contraseña incorrectos ❌";
+                    }
+
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
     </script>
 </body>
+
 </html>
