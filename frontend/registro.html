@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Looped & Hooked</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="login-body">
+    <main class="login-wrapper">
+        <section class="register-card">
+            <div class="register-left">
+                <div class="register-left-overlay">
+                    <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="register-logo">
+                    <div class="register-left-textbox">
+                        <p class="register-small-title">ÚNETE A LA COMUNIDAD</p>
+                        <h1>Crea tu cuenta</h1>
+                        <p class="register-description">
+                            Forma parte de un espacio donde la creatividad artesanal,
+                            los detalles únicos y el talento hecho a mano cobra vida.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="register-right">
+                <div class="register-form-box">
+                    <h2>Registro de usuario</h2>
+                    <p class="login-text">
+                        Completa tus datos para empezar en Looped & Hooked.
+                    </p>
+
+                    <form class="register-form" id="formRegistro" onsubmit="registrarUsuario(event)" novalidate>
+                        <select id="tipoUsuario" onchange="mostrarCamposArtista()" required>
+                            <option value="">Tipo de usuario</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="artista">Artista</option>
+                        </select>
+
+                        <input type="text" id="nombre" placeholder="Nombre completo" required minlength="3" maxlength="100">
+                        <input type="text" id="cedula" placeholder="Número de cédula" required minlength="9" maxlength="12" inputmode="numeric">
+                        <input type="email" id="correo" placeholder="Correo electrónico" required maxlength="120">
+                        <input type="text" id="usuario" placeholder="Nombre de usuario" required minlength="4" maxlength="20">
+                        <input type="text" id="telefono" placeholder="Número de teléfono" required minlength="8" maxlength="15" inputmode="numeric">
+                        <input type="password" id="password" placeholder="Contraseña" required minlength="8" maxlength="50">
+
+                        <div id="camposArtista" class="artist-box" style="display: none;">
+                            <h3>Datos del artista</h3>
+                            <input type="text" id="especialidad" placeholder="Especialidad (peluches, ropa, accesorios)" maxlength="100">
+                            <input type="number" id="materiales" placeholder="Costo de materiales" min="0" step="0.01">
+                            <input type="number" id="manoObra" placeholder="Costo de mano de obra" min="0" step="0.01">
+                            <input type="number" id="herramientas" placeholder="Costo de herramientas" min="0" step="0.01">
+                            <input type="number" id="empaque" placeholder="Costo de empaque" min="0" step="0.01">
+                        </div>
+
+                        <p id="mensajeRegistro"></p>
+                        <button type="submit" class="btn-login">Crear cuenta</button>
+                    </form>
+
+                    <div class="register-box">
+                        <p>¿Ya tienes una cuenta?</p>
+                        <a href="login.html" class="btn-register">Volver al login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function mostrarCamposArtista() {
+            let tipo = document.getElementById("tipoUsuario").value;
+            let campos = document.getElementById("camposArtista");
+
+            if (tipo === "artista") {
+                campos.style.display = "block";
+            } else {
+                campos.style.display = "none";
+            }
+        }
+
+        function validarNombre(nombre) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+            return regex.test(nombre) && nombre.length >= 3;
+        }
+
+        function validarCedula(cedula) {
+            const regex = /^[0-9]{9,12}$/;
+            return regex.test(cedula);
+        }
+
+        function validarCorreo(correo) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(correo);
+        }
+
+        function validarUsername(username) {
+            const regex = /^[A-Za-z0-9_.]{4,20}$/;
+            return regex.test(username);
+        }
+
+        function validarTelefono(telefono) {
+            const regex = /^[0-9]{8,15}$/;
+            return regex.test(telefono);
+        }
+
+        function validarPassword(password) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            return regex.test(password);
+        }
+
+        function validarTextoLibre(texto) {
+            const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s,]+$/;
+            return regex.test(texto);
+        }
+
+        function registrarUsuario(event) {
+            event.preventDefault();
+            console.log("Se ejecutó registrarUsuario");
+
+            const mensaje = document.getElementById("mensajeRegistro");
+
+            const datos = {
+                tipo: document.getElementById("tipoUsuario").value.trim(),
+                nombre: document.getElementById("nombre").value.trim(),
+                cedula: document.getElementById("cedula").value.trim(),
+                correo: document.getElementById("correo").value.trim(),
+                username: document.getElementById("usuario").value.trim(),
+                telefono: document.getElementById("telefono").value.trim(),
+                password: document.getElementById("password").value.trim(),
+                especialidad: document.getElementById("especialidad").value.trim(),
+                materiales: document.getElementById("materiales").value.trim(),
+                manoObra: document.getElementById("manoObra").value.trim(),
+                herramientas: document.getElementById("herramientas").value.trim(),
+                empaque: document.getElementById("empaque").value.trim()
+            };
+
+            console.log("Datos enviados:", datos);
+
+            mensaje.textContent = "";
+            mensaje.style.color = "#c94b66";
+
+            if (!datos.tipo || !datos.nombre || !datos.cedula || !datos.correo || !datos.username || !datos.telefono || !datos.password) {
+                mensaje.textContent = "Debes completar todos los campos obligatorios.";
+                return;
+            }
+
+            if (!validarNombre(datos.nombre)) {
+                mensaje.textContent = "El nombre completo debe tener al menos 3 letras y solo puede contener letras y espacios.";
+                return;
+            }
+
+            if (!validarCedula(datos.cedula)) {
+                mensaje.textContent = "La cédula debe contener solo números y tener entre 9 y 12 dígitos.";
+                return;
+            }
+
+            if (!validarCorreo(datos.correo)) {
+                mensaje.textContent = "Ingresa un correo electrónico válido.";
+                return;
+            }
+
+            if (!validarUsername(datos.username)) {
+                mensaje.textContent = "El nombre de usuario debe tener entre 4 y 20 caracteres y solo puede contener letras, números, guion bajo o punto.";
+                return;
+            }
+
+            if (!validarTelefono(datos.telefono)) {
+                mensaje.textContent = "El teléfono debe contener solo números y tener entre 8 y 15 dígitos.";
+                return;
+            }
+
+            if (!validarPassword(datos.password)) {
+                mensaje.textContent = "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
+                return;
+            }
+
+            if (datos.tipo === "artista") {
+                if (!datos.especialidad) {
+                    mensaje.textContent = "Debes indicar la especialidad del artista.";
+                    return;
+                }
+
+                if (!validarTextoLibre(datos.especialidad)) {
+                    mensaje.textContent = "La especialidad solo puede contener letras, espacios y comas.";
+                    return;
+                }
+
+                if (datos.materiales && Number(datos.materiales) < 0) {
+                    mensaje.textContent = "El costo de materiales no puede ser negativo.";
+                    return;
+                }
+
+                if (datos.manoObra && Number(datos.manoObra) < 0) {
+                    mensaje.textContent = "El costo de mano de obra no puede ser negativo.";
+                    return;
+                }
+
+                if (datos.herramientas && Number(datos.herramientas) < 0) {
+                    mensaje.textContent = "El costo de herramientas no puede ser negativo.";
+                    return;
+                }
+
+                if (datos.empaque && Number(datos.empaque) < 0) {
+                    mensaje.textContent = "El costo de empaque no puede ser negativo.";
+                    return;
+                }
+            }
+
+            fetch("/backend/registro.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body:
+                    "tipo=" + encodeURIComponent(datos.tipo) +
+                    "&nombre=" + encodeURIComponent(datos.nombre) +
+                    "&cedula=" + encodeURIComponent(datos.cedula) +
+                    "&correo=" + encodeURIComponent(datos.correo) +
+                    "&username=" + encodeURIComponent(datos.username) +
+                    "&telefono=" + encodeURIComponent(datos.telefono) +
+                    "&password=" + encodeURIComponent(datos.password) +
+                    "&especialidad=" + encodeURIComponent(datos.especialidad) +
+                    "&materiales=" + encodeURIComponent(datos.materiales) +
+                    "&manoObra=" + encodeURIComponent(datos.manoObra) +
+                    "&herramientas=" + encodeURIComponent(datos.herramientas) +
+                    "&empaque=" + encodeURIComponent(datos.empaque)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Respuesta del backend:", data);
+                    const respuesta = data.trim();
+
+                    if (respuesta === "OK") {
+                        mensaje.style.color = "#4d8b63";
+                        mensaje.textContent = "Cuenta creada exitosamente. Redirigiendo al inicio de sesión...";
+
+                        setTimeout(() => {
+                            window.location.href = "login.html";
+                        }, 1200);
+                    } else {
+                        mensaje.style.color = "#c94b66";
+                        mensaje.textContent = respuesta;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en fetch:", error);
+                    mensaje.style.color = "#c94b66";
+                    mensaje.textContent = "Ocurrió un error al conectar con el servidor.";
+                });
+        }
+    </script>
+</body>
+
+</html>

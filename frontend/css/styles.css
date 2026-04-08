@@ -1089,3 +1089,52 @@ Registro nuevo
         padding: 18px 20px;
     }
 }
+
+/* Cambiar contraseña link */
+.extra-login-links {
+    margin-top: 14px;
+    text-align: center;
+}
+
+.forgot-password-link {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: auto !important;
+
+    color: #8a6f96 !important;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+    background: transparent !important;
+    color: #6f597c !important;
+    text-decoration: underline;
+}
+
+/* Separador */
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 22px 0;
+    color: #8a7d8f;
+    font-weight: 600;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e8dde9;
+    margin: 0 12px;
+}

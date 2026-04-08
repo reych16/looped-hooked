@@ -12,14 +12,13 @@
     <main class="login-wrapper">
         <section class="login-card">
 
-            <!-- Panel Izquierdo -->
             <div class="login-left">
                 <div class="login-left-content">
                     <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="login-logo">
                     <h1>Descubre Looped & Hooked</h1>
                     <p class="login-left-text">
                         Descubre un espacio donde la creatividad y el trabajo hecho a mano
-                        se trans forman en piezas únicas, creadas con dedicación y detalle.
+                        se transforman en piezas únicas, creadas con dedicación y detalle.
                     </p>
                     <div class="login-illustration">
                         <img src="img/login_shopping.svg" class="hero-illustration">
@@ -27,7 +26,6 @@
                 </div>
             </div>
 
-            <!-- Panel Derecho -->
             <div class="login-right">
                 <div class="login-form-box">
                     <h2>Iniciar sesión</h2>
@@ -35,16 +33,20 @@
                         Accede a tu cuenta para explorar Looped & Hooked.
                     </p>
 
-                    <form class="login-form" id="loginForm">
+                    <form class="login-form" id="loginForm" novalidate>
                         <input type="text" id="loginUsuario" placeholder="Nombre de usuario" required>
                         <input type="password" id="loginPassword" placeholder="Contraseña" required>
 
                         <button type="submit" class="btn-login">Ingresar</button>
                     </form>
 
-                    <p id="mensajeLogin"></p>
+                    <div class="extra-login-links">
+                        <a href="./cambiar_password.html" class="forgot-password-link">
+                            ¿Olvidaste o quieres cambiar tu contraseña?
+                        </a>
+                    </div>
 
-                    <p id="mensajeLogin"></p>
+                    <p id="mensajeLogin" class="login-message"></p>
 
                     <div class="separator">
                         <span>o</span>
@@ -61,39 +63,52 @@
 
     <script>
         document.getElementById("loginForm").addEventListener("submit", function (event) {
-            console.log("SE EJECUTA LOGIN"); // prueba
-
             event.preventDefault();
 
-            let usuario = document.getElementById("loginUsuario").value;
-            let password = document.getElementById("loginPassword").value;
-            let mensaje = document.getElementById("mensajeLogin");
+            const usuario = document.getElementById("loginUsuario").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const mensaje = document.getElementById("mensajeLogin");
 
             mensaje.textContent = "";
+            mensaje.style.color = "#c94b66";
 
-            fetch("login.php", {
+            if (usuario === "" || password === "") {
+                mensaje.textContent = "Debes completar el usuario y la contraseña.";
+                return;
+            }
+
+            fetch("/backend/login.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
-                body: "username=" + encodeURIComponent(usuario) +
+                body:
+                    "username=" + encodeURIComponent(usuario) +
                     "&password=" + encodeURIComponent(password)
             })
                 .then(response => response.text())
                 .then(data => {
+                    const respuesta = data.trim();
 
-                    console.log("Respuesta:", data);
+                    if (respuesta === "OK") {
+                        mensaje.style.color = "#4d8b63";
+                        mensaje.textContent = "Inicio de sesión exitoso. Redirigiendo...";
 
-                    if (data.trim() === "OK") {
-                        alert("Login correcto ✅");
-                        window.location.href = "index.html";
+                        setTimeout(() => {
+                            window.location.href = "index.html";
+                        }, 1000);
+                    } else if (respuesta.startsWith("ERROR|")) {
+                        mensaje.style.color = "#c94b66";
+                        mensaje.textContent = respuesta.split("|")[1];
                     } else {
-                        mensaje.textContent = "Usuario o contraseña incorrectos ❌";
+                        mensaje.style.color = "#c94b66";
+                        mensaje.textContent = "Usuario o contraseña incorrectos. Vuelve a intentarlo.";
                     }
-
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                    mensaje.style.color = "#c94b66";
+                    mensaje.textContent = "Ocurrió un error al conectar con el servidor.";
                 });
         });
     </script>
