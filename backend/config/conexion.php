@@ -13,7 +13,7 @@ if (getenv("MYSQL_ADDON_HOST")) {
     $db   = "looped_hooked";
     $port = "3306";
     $user = "root";
-    $pass = "root1234";
+    $pass = "Pr2oo5411";
 }
 
 try {

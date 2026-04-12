@@ -40,6 +40,7 @@ header img {
 header p {
     color: #777;
 }
+
 /* Titulos generales */
 h1 {
     color: #ad5cad;
@@ -447,7 +448,7 @@ Registro nuevo
 /* Panel Izquierdo */
 .register-left {
     position: relative;
-    background: 
+    background:
         linear-gradient(rgba(60, 33, 71, 0.45), rgba(60, 33, 71, 0.45)),
         url("../img/registro_img.png");
     background-size: cover;
@@ -855,11 +856,25 @@ Registro nuevo
     line-height: 1.5;
 }
 
-.category-pink { background: #ffe5ee; }
-.category-lilac { background: #f1e5ff; }
-.category-peach { background: #fde7df; }
-.category-green { background: #e4f3e7; }
-.category-cream { background: #f7efe4; }
+.category-pink {
+    background: #ffe5ee;
+}
+
+.category-lilac {
+    background: #f1e5ff;
+}
+
+.category-peach {
+    background: #fde7df;
+}
+
+.category-green {
+    background: #e4f3e7;
+}
+
+.category-cream {
+    background: #f7efe4;
+}
 
 /* PRODUCTOS */
 .products-grid {
@@ -1137,4 +1152,51 @@ Registro nuevo
     height: 1px;
     background: #e8dde9;
     margin: 0 12px;
+}
+
+.perfil-card {
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    margin: 20px auto;
+    width: 60%;
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.perfil-card h2 {
+    text-align: center;
+    color: #ad5cad;
+}
+
+.perfil-card p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.perfil-card input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: 1px solid #e1bee7;
+}
+
+.form-perfil {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* espacio entre campos */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #6a1b9a;
+    font-size: 14px;
 }
