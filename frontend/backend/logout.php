@@ -6,5 +6,5 @@ session_unset();
 session_destroy();
 
 // Redirigir al login o index
-header("Location: ../frontend/login.html");
+header("Location: ../login.html");
 exit();

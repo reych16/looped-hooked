@@ -3,7 +3,7 @@ session_start();
 include(__DIR__ . "/config/conexion.php");
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../frontend/login.html");
+    header("Location: ../login.html");
     exit();
 }
 
@@ -19,7 +19,7 @@ $imagenes = $stmtImg->fetchAll(PDO::FETCH_ASSOC);
 
 // 🗑️ Borrar archivos físicos
 foreach ($imagenes as $img) {
-    $ruta = "../frontend/" . $img['ruta'];
+    $ruta = "../" . $img['ruta'];
     if (file_exists($ruta)) {
         unlink($ruta);
     }
@@ -37,5 +37,5 @@ $stmt = $conexion->prepare("
 ");
 $stmt->execute([$id, $usuario_id]);
 
-header("Location: ../frontend/perfil.php");
+header("Location: ../perfil.php");
 exit();

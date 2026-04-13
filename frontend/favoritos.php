@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 // 🔒 Validar sesión
 if (!isset($_SESSION['usuario_id'])) {
@@ -48,7 +48,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="index.php" class="header-link">Inicio</a>
             <a href="catalogo.php" class="header-link">Catálogo</a>
             <a href="perfil.php" class="header-link">Perfil</a>
-            <a href="../backend/logout.php" class="header-link">Cerrar sesión</a>
+            <a href="backend/logout.php" class="header-link">Cerrar sesión</a>
         </div>
     </header>
 
@@ -92,7 +92,7 @@ $favoritos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </a>
 
                                 <!-- Quitar favorito -->
-                                <a href="../backend/quitar_favorito.php?id=<?php echo $prod['id']; ?>"
+                                <a href="backend/quitar_favorito.php?id=<?php echo $prod['id']; ?>"
                                     class="btn-eliminar"
                                     onclick="return confirm('¿Quitar de favoritos?');">
                                     Quitar ❤️

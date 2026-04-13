@@ -3,7 +3,7 @@ session_start();
 include("config/conexion.php");
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../frontend/login.html");
+    header("Location: ../login.html");
     exit();
 }
 
@@ -18,5 +18,5 @@ $stmt = $conexion->prepare("
 
 $stmt->execute([$usuario_id, $producto_id]);
 
-header("Location: ../frontend/favoritos.php");
+header("Location: ../favoritos.php");
 exit();

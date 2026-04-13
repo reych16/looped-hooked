@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 // 🔎 Validar ID
 if (!isset($_GET['id'])) {
@@ -74,7 +74,7 @@ $total = $producto['precio_total'];
                 <a href="perfil.php" class="header-link">
                     Perfil de <?php echo $_SESSION['username']; ?>
                 </a>
-                <a href="../backend/logout.php" class="header-link">Cerrar sesión</a>
+                <a href="backend/logout.php" class="header-link">Cerrar sesión</a>
             <?php else: ?>
                 <a href="login.html" class="header-link">Mi cuenta</a>
             <?php endif; ?>
@@ -137,7 +137,7 @@ $total = $producto['precio_total'];
 
     <script>
         function verificarSesion(accion) {
-            fetch('../backend/verificar_sesion.php', {
+            fetch('backend/verificar_sesion.php', {
                     credentials: 'include'
                 })
                 .then(res => res.json())
@@ -158,7 +158,7 @@ $total = $producto['precio_total'];
         }
 
         function agregarFavorito(idProducto) {
-            fetch('../backend/verificar_sesion.php')
+            fetch('backend/verificar_sesion.php')
                 .then(res => res.json())
                 .then(data => {
                     if (data.logueado) {
@@ -174,7 +174,7 @@ $total = $producto['precio_total'];
         }
 
         function agregarFavorito(productoId) {
-            fetch('../backend/agregar_favorito.php', {
+            fetch('backend/agregar_favorito.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'

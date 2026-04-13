@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 // ✅ Validar sesión
 if (!isset($_SESSION['usuario_id'])) {
@@ -41,7 +41,7 @@ if ($usuario['rol'] === 'artista') {
 <head>
     <meta charset="UTF-8">
     <title>Mi Perfil</title>
-    <link rel="stylesheet" href="/looped-hooked/frontend/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body class="index-body">
@@ -60,7 +60,7 @@ if ($usuario['rol'] === 'artista') {
 
             <?php if (isset($_SESSION['username'])): ?>
 
-                <a href="../backend/logout.php" class="header-link">Cerrar sesión</a>
+                <a href="backend/logout.php" class="header-link">Cerrar sesión</a>
             <?php else: ?>
                 <a href="login.php" class="header-link">Mi cuenta</a>
             <?php endif; ?>
@@ -105,7 +105,7 @@ if ($usuario['rol'] === 'artista') {
         <div id="formEditar" style="display:<?php echo isset($_SESSION['errores']) ? 'block' : 'none'; ?>;" class="perfil-card">
             <h2>Editar datos</h2>
 
-            <form action="../backend/actualizar_perfil.php" method="POST" enctype="multipart/form-data" class="form-perfil">
+            <form action="backend/actualizar_perfil.php" method="POST" enctype="multipart/form-data" class="form-perfil">
 
                 <div class="form-group">
                     <label>Nombre completo</label>
@@ -145,7 +145,7 @@ if ($usuario['rol'] === 'artista') {
             <div id="formArtista" style="display:none;" class="perfil-card">
                 <h2>Editar información del artista</h2>
 
-                <form action="../backend/actualizar_perfil.php" method="POST" class="form-perfil">
+                <form action="backend/actualizar_perfil.php" method="POST" class="form-perfil">
 
                     <div class="form-group">
                         <label>Especialidad</label>
@@ -220,7 +220,7 @@ if ($usuario['rol'] === 'artista') {
 
                                 <div class="acciones-producto">
                                     <a href="editar_producto.php?id=<?php echo $prod['id']; ?>" class="btn-editar">Editar</a>
-                                    <a href="../backend/eliminar_producto.php?id=<?php echo $prod['id']; ?>" class="btn-eliminar"
+                                    <a href="backend/eliminar_producto.php?id=<?php echo $prod['id']; ?>" class="btn-eliminar"
                                         onclick="return confirm('¿Eliminar este producto?');">Eliminar</a>
                                 </div>
 

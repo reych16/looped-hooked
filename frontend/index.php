@@ -2,7 +2,7 @@
 session_start();
 ?>
 <?php
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 // 📦 Obtener productos (puedes limitar si quieres)
 $stmt = $conexion->prepare("
@@ -66,7 +66,7 @@ $artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
                 <a href="perfil.php" class="header-link">
                     Perfil de <?php echo $_SESSION['username']; ?>
                 </a>
-                <a href="../backend/logout.php" class="header-link">Cerrar sesión</a>
+                <a href="backend/logout.php" class="header-link">Cerrar sesión</a>
             <?php else: ?>
                 <a href="login.html" class="header-link">Mi cuenta</a>
             <?php endif; ?>
@@ -301,7 +301,7 @@ $artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
 
     <script>
         function verificarSesion(accion) {
-            fetch('../backend/verificar_sesion.php', {
+            fetch('backend/verificar_sesion.php', {
                     credentials: 'include'
                 })
                 .then(res => res.json())

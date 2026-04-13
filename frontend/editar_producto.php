@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 // 🔒 Validar sesión
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'artista') {
@@ -54,7 +54,7 @@ $costos = $stmtCostos->fetch(PDO::FETCH_ASSOC);
     <div class="perfil-card">
         <h2>Editar producto</h2>
 
-        <form action="../backend/actualizar_producto.php" method="POST" enctype="multipart/form-data" class="form-perfil">
+        <form action="backend/actualizar_producto.php" method="POST" enctype="multipart/form-data" class="form-perfil">
 
             <input type="hidden" name="id" value="<?php echo $producto['id']; ?>">
 

@@ -3,7 +3,7 @@ session_start();
 include(__DIR__ . "/config/conexion.php");
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: ../frontend/login.html");
+    header("Location: ../login.html");
     exit();
 }
 
@@ -59,7 +59,7 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
 
     // ❌ Eliminar archivo viejo
     if ($imagenActual) {
-        $rutaFisica = "../frontend/" . $imagenActual['ruta'];
+        $rutaFisica = "../" . $imagenActual['ruta'];
         if (file_exists($rutaFisica)) {
             unlink($rutaFisica);
         }
@@ -70,7 +70,7 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
     }
 
     // 📁 Guardar nueva imagen
-    $carpeta = "../frontend/img/productos/";
+    $carpeta = "../img/productos/";
     if (!is_dir($carpeta)) {
         mkdir($carpeta, 0777, true);
     }
@@ -89,5 +89,5 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
     $stmtNew->execute([$id, $rutaBD]);
 }
 
-header("Location: ../frontend/perfil.php");
+header("Location: ../perfil.php");
 exit();

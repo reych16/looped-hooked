@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../backend/config/conexion.php");
+include("backend/config/conexion.php");
 
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
@@ -33,7 +33,7 @@ if (isset($_POST['nombre'])) {
     // 🔐 Verificar contraseña
     if (!password_verify($password_actual, $user['password_hash'])) {
         $_SESSION['errores'] = ["Contraseña actual incorrecta"];
-        header("Location: ../frontend/perfil.php");
+        header("Location: ../perfil.php");
         exit();
     }
 
@@ -41,7 +41,7 @@ if (isset($_POST['nombre'])) {
 
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
 
-        $carpeta = "../frontend/img/perfiles/";
+        $carpeta = "../img/perfiles/";
 
         if (!is_dir($carpeta)) {
             mkdir($carpeta, 0777, true);
@@ -67,7 +67,7 @@ if (isset($_POST['nombre'])) {
 
     $_SESSION['username'] = $username;
 
-    header("Location: ../frontend/perfil.php");
+    header("Location: ../perfil.php");
     exit();
 }
 
@@ -131,6 +131,6 @@ if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'artista' && isset($_POST['e
         ]);
     }
 
-    header("Location: ../frontend/perfil.php");
+    header("Location: ../perfil.php");
     exit();
 }
