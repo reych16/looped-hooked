@@ -41,18 +41,22 @@ if (isset($_POST['nombre'])) {
 
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
 
-        $carpeta = "../img/perfiles/";
+        // Ruta absoluta al directorio donde se guardan las imágenes
+        $rutaBase = __DIR__ . "/../img/perfiles/";
 
-        if (!is_dir($carpeta)) {
-            mkdir($carpeta, 0777, true);
+        // Si no existe, créalo
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
         }
 
+        // Nombre único para evitar colisiones
         $nombreArchivo = time() . "_" . basename($_FILES['foto_perfil']['name']);
-        $rutaArchivo = $carpeta . $nombreArchivo;
+        $rutaArchivo = $rutaBase . $nombreArchivo;
 
+        // Mover archivo
         move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $rutaArchivo);
 
-        // ruta que se guarda en BD
+        // Guardar ruta relativa en la BD
         $rutaFoto = "img/perfiles/" . $nombreArchivo;
     }
 

@@ -53,7 +53,7 @@ $producto_id = $conexion->lastInsertId();
 // 📸 Subir imagen
 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
 
-    $carpeta = "../img/productos/";
+    $carpeta = __DIR__ . "/../img/productos/";
 
     if (!is_dir($carpeta)) {
         mkdir($carpeta, 0777, true);

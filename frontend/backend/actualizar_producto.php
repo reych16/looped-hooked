@@ -59,18 +59,19 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
 
     // ❌ Eliminar archivo viejo
     if ($imagenActual) {
-        $rutaFisica = "../" . $imagenActual['ruta'];
+        $rutaFisica = __DIR__ . "/../" . $imagenActual['ruta'];
+
         if (file_exists($rutaFisica)) {
             unlink($rutaFisica);
         }
 
-        // eliminar registro
         $del = $conexion->prepare("DELETE FROM imagenes_producto WHERE id = ?");
         $del->execute([$imagenActual['id']]);
     }
 
     // 📁 Guardar nueva imagen
-    $carpeta = "../img/productos/";
+    $carpeta = __DIR__ . "/../img/productos/";
+
     if (!is_dir($carpeta)) {
         mkdir($carpeta, 0777, true);
     }
@@ -80,12 +81,14 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
 
     move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
 
+    // 💾 ruta para base de datos (NO cambia)
     $rutaBD = "img/productos/" . $nombreArchivo;
 
     $stmtNew = $conexion->prepare("
-        INSERT INTO imagenes_producto (producto_id, ruta, es_principal)
-        VALUES (?, ?, 1)
-    ");
+    INSERT INTO imagenes_producto (producto_id, ruta, es_principal)
+    VALUES (?, ?, 1)
+");
+
     $stmtNew->execute([$id, $rutaBD]);
 }
 
