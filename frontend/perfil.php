@@ -72,6 +72,14 @@ if ($usuario['rol'] === 'artista') {
         <div class="perfil-card">
             <h2>Información del usuario</h2>
 
+            <div class="foto-perfil">
+                <?php if (!empty($usuario['foto_perfil'])): ?>
+                    <img src="<?php echo $usuario['foto_perfil']; ?>" alt="Foto de perfil">
+                <?php else: ?>
+                    <img src="img/default-user.png" alt="Sin foto">
+                <?php endif; ?>
+            </div>
+
             <p><strong>Usuario:</strong> <?php echo htmlspecialchars($usuario['username']); ?></p>
             <p><strong>Correo:</strong> <?php echo htmlspecialchars($usuario['correo']); ?></p>
             <p><strong>Nombre:</strong> <?php echo htmlspecialchars($usuario['nombre_completo']); ?></p>
@@ -97,7 +105,7 @@ if ($usuario['rol'] === 'artista') {
         <div id="formEditar" style="display:<?php echo isset($_SESSION['errores']) ? 'block' : 'none'; ?>;" class="perfil-card">
             <h2>Editar datos</h2>
 
-            <form action="../backend/actualizar_perfil.php" method="POST" class="form-perfil">
+            <form action="../backend/actualizar_perfil.php" method="POST" enctype="multipart/form-data" class="form-perfil">
 
                 <div class="form-group">
                     <label>Nombre completo</label>
@@ -117,6 +125,11 @@ if ($usuario['rol'] === 'artista') {
                 <div class="form-group">
                     <label>Teléfono</label>
                     <input type="text" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono']); ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Foto de perfil</label>
+                    <input type="file" name="foto_perfil" accept="image/*">
                 </div>
 
                 <div class="form-group">
@@ -178,26 +191,39 @@ if ($usuario['rol'] === 'artista') {
         <?php endif; ?>
 
         <?php if ($usuario['rol'] === 'artista'): ?>
-            <div class="perfil-card">
+            <div class="perfil-card productos-section">
                 <h2>Mis productos</h2>
-                <a href="nuevo_post.php"><button>Agregar nuevo producto</button></a>
+                <div class="contenedor-boton">
+                    <a href="nuevo_post.php" class="btn-agregar">Agregar nuevo producto</a>
+                </div>
 
                 <?php if (!empty($productos)): ?>
-                    <div class="mis-productos">
+                    <div class="productos-grid">
                         <?php foreach ($productos as $prod): ?>
                             <div class="producto-card">
-                                <h3><?php echo $prod['nombre']; ?></h3>
-                                <p><?php echo $prod['descripcion']; ?></p>
-                                <p>Precio: $<?php echo $prod['precio_total']; ?></p>
 
                                 <?php
                                 $stmtImg = $conexion->prepare("SELECT * FROM imagenes_producto WHERE producto_id = ? AND es_principal = 1");
                                 $stmtImg->execute([$prod['id']]);
                                 $imagen = $stmtImg->fetch(PDO::FETCH_ASSOC);
                                 ?>
+
                                 <?php if ($imagen): ?>
-                                    <img src="<?php echo $imagen['ruta']; ?>" alt="<?php echo $prod['nombre']; ?>" width="150">
+                                    <div class="img-container">
+                                        <img src="<?php echo $imagen['ruta']; ?>" alt="<?php echo $prod['nombre']; ?>">
+                                    </div>
                                 <?php endif; ?>
+
+                                <h3><?php echo $prod['nombre']; ?></h3>
+                                <p><?php echo $prod['descripcion']; ?></p>
+                                <p class="precio">₡<?php echo number_format($prod['precio_total'], 2); ?></p>
+
+                                <div class="acciones-producto">
+                                    <a href="editar_producto.php?id=<?php echo $prod['id']; ?>" class="btn-editar">Editar</a>
+                                    <a href="../backend/eliminar_producto.php?id=<?php echo $prod['id']; ?>" class="btn-eliminar"
+                                        onclick="return confirm('¿Eliminar este producto?');">Eliminar</a>
+                                </div>
+
                             </div>
                         <?php endforeach; ?>
                     </div>

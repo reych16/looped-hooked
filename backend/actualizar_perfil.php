@@ -37,14 +37,33 @@ if (isset($_POST['nombre'])) {
         exit();
     }
 
+    $rutaFoto = $user['foto_perfil']; // mantener la actual por defecto
+
+    if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
+
+        $carpeta = "../frontend/img/perfiles/";
+
+        if (!is_dir($carpeta)) {
+            mkdir($carpeta, 0777, true);
+        }
+
+        $nombreArchivo = time() . "_" . basename($_FILES['foto_perfil']['name']);
+        $rutaArchivo = $carpeta . $nombreArchivo;
+
+        move_uploaded_file($_FILES['foto_perfil']['tmp_name'], $rutaArchivo);
+
+        // ruta que se guarda en BD
+        $rutaFoto = "img/perfiles/" . $nombreArchivo;
+    }
+
     // ✅ Update correcto
     $stmt = $conexion->prepare("
         UPDATE usuarios 
-        SET nombre_completo = ?, correo = ?, username = ?, telefono = ?
+        SET nombre_completo = ?, correo = ?, username = ?, telefono = ?, foto_perfil = ?
         WHERE id = ?
     ");
 
-    $stmt->execute([$nombre, $correo, $username, $telefono, $id]);
+    $stmt->execute([$nombre, $correo, $username, $telefono, $rutaFoto, $id]);
 
     $_SESSION['username'] = $username;
 

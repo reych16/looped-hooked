@@ -1,6 +1,36 @@
 <?php
 session_start();
 ?>
+<?php
+include("../backend/config/conexion.php");
+
+// 📦 Obtener productos (puedes limitar si quieres)
+$stmt = $conexion->prepare("
+    SELECT p.*, i.ruta 
+    FROM productos p
+    LEFT JOIN imagenes_producto i 
+        ON p.id = i.producto_id AND i.es_principal = 1
+    WHERE p.activo = 1
+    ORDER BY p.id DESC
+    LIMIT 6
+");
+$stmt->execute();
+$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php
+// 🔹 Obtener artistas reales
+$stmtArtistas = $conexion->prepare("
+    SELECT u.id, u.username, u.nombre_completo, a.especialidad
+    FROM usuarios u
+    INNER JOIN artistas a ON u.id = a.id
+    WHERE u.estado = 'activo'
+    LIMIT 6
+");
+$stmtArtistas->execute();
+
+$artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,10 +49,17 @@ session_start();
             <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="site-logo">
         </div>
 
-        <div class="header-center">
-            <input type="text" placeholder="Buscar productos artesanales..." class="search-input">
-            <button class="search-btn">Buscar</button>
-        </div>
+        <form class="header-center" action="catalogo.php" method="GET">
+
+            <input
+                type="text"
+                name="busqueda"
+                placeholder="Buscar productos artesanales..."
+                class="search-input">
+
+            <button type="submit" class="search-btn">Buscar</button>
+
+        </form>
 
         <div class="header-right">
             <?php if (isset($_SESSION['username'])): ?>
@@ -36,7 +73,9 @@ session_start();
             <a href="#" class="header-link" onclick="verificarSesion('favorito')">
                 Favoritos
             </a>
-            <a href="#" class="header-link">Carrito</a>
+            <a href="#" class="header-link" onclick="verificarSesion('carrito')">
+                Carrito
+            </a>
         </div>
     </header>
 
@@ -60,7 +99,7 @@ session_start();
                 dedicación y detalles que hacen cada pieza especial.
             </p>
             <div class="hero-actions">
-                <a href="#" class="primary-btn">Explorar productos</a>
+                <a href="catalogo.php" class="primary-btn">Explorar productos</a>
                 <a href="registro.html" class="secondary-btn">Únete como artista</a>
             </div>
         </div>
@@ -78,30 +117,42 @@ session_start();
         </div>
 
         <div class="categories-grid">
-            <div class="category-card category-pink">
-                <h3>Accesorios</h3>
-                <p>Piezas pequeñas con mucho estilo.</p>
-            </div>
 
-            <div class="category-card category-lilac">
-                <h3>Decoración</h3>
-                <p>Detalles únicos para tu espacio.</p>
-            </div>
-
-            <div class="category-card category-peach">
+            <a href="catalogo.php?categoria=1" class="category-card category-peach">
                 <h3>Ropa</h3>
                 <p>Diseños tejidos con personalidad.</p>
-            </div>
+            </a>
 
-            <div class="category-card category-green">
+            <a href="catalogo.php?categoria=2" class="category-card category-pink">
+                <h3>Accesorios</h3>
+                <p>Piezas pequeñas con mucho estilo.</p>
+            </a>
+
+            <a href="catalogo.php?categoria=3" class="category-card category-lilac">
+                <h3>Amigurumis</h3>
+                <p>Creaciones adorables hechas a mano.</p>
+            </a>
+
+            <a href="catalogo.php?categoria=4" class="category-card category-cream">
+                <h3>Decoración</h3>
+                <p>Detalles únicos para tu espacio.</p>
+            </a>
+
+            <a href="catalogo.php?categoria=5" class="category-card category-blue">
+                <h3>Mascotas</h3>
+                <p>Accesorios para tus peludos.</p>
+            </a>
+
+            <a href="catalogo.php?categoria=6" class="category-card category-yellow">
                 <h3>Regalos</h3>
                 <p>Opciones especiales para obsequiar.</p>
-            </div>
+            </a>
 
-            <div class="category-card category-cream">
-                <h3>Peluches</h3>
-                <p>Creaciones adorables hechas a mano.</p>
-            </div>
+            <a href="catalogo.php?categoria=7" class="category-card category-green">
+                <h3>Plantas</h3>
+                <p>Decoración natural tejida.</p>
+            </a>
+
         </div>
     </section>
 
@@ -113,41 +164,42 @@ session_start();
         </div>
 
         <div class="products-grid">
-            <article class="product-card">
-                <img src="img/Maceta.png" alt="Maceta colgante">
-                <div class="product-info">
-                    <h3>Maceta con planta colgante</h3>
-                    <p class="product-price">₡10 000</p>
-                    <p class="product-meta">Material: Lana</p>
-                    <button class="product-btn" onclick="verificarSesion('producto')">
-                        Ver producto
-                    </button>
-                </div>
-            </article>
 
-            <article class="product-card">
-                <img src="img/pokeball.png" alt="Monedero Pokeball">
-                <div class="product-info">
-                    <h3>Monedero Pokeball</h3>
-                    <p class="product-price">₡8 000</p>
-                    <p class="product-meta">Material: Lana</p>
-                    <button class="product-btn" onclick="verificarSesion('producto')">
-                        Ver producto
-                    </button>
-                </div>
-            </article>
+            <?php if (!empty($productos)): ?>
+                <?php foreach ($productos as $prod): ?>
 
-            <article class="product-card">
-                <img src="img/Sueter.png" alt="Suéter con flores">
-                <div class="product-info">
-                    <h3>Suéter con flores</h3>
-                    <p class="product-price">₡20 000</p>
-                    <p class="product-meta">Material: Algodón</p>
-                    <button class="product-btn" onclick="verificarSesion('producto')">
-                        Ver producto
-                    </button>
-                </div>
-            </article>
+                    <article class="product-card">
+
+                        <!-- Imagen -->
+                        <?php if ($prod['ruta']): ?>
+                            <img src="<?php echo $prod['ruta']; ?>" alt="<?php echo $prod['nombre']; ?>">
+                        <?php else: ?>
+                            <img src="img/default.png" alt="Sin imagen">
+                        <?php endif; ?>
+
+                        <div class="product-info">
+                            <h3><?php echo htmlspecialchars($prod['nombre']); ?></h3>
+
+                            <p class="product-price">
+                                ₡<?php echo number_format($prod['precio_total'], 0); ?>
+                            </p>
+
+                            <p class="product-meta">
+                                Tiempo: <?php echo $prod['tiempo_elaboracion']; ?> hrs
+                            </p>
+
+                            <a href="ver_producto.php?id=<?php echo $prod['id']; ?>" class="product-btn">
+                                Ver producto
+                            </a>
+                        </div>
+
+                    </article>
+
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay productos disponibles.</p>
+            <?php endif; ?>
+
         </div>
     </section>
 
@@ -171,21 +223,27 @@ session_start();
         </div>
 
         <div class="artists-grid">
-            <div class="artist-card">
-                <h3>Ana López</h3>
-                <p>Especialidad: Decoración tejida</p>
-            </div>
 
-            <div class="artist-card">
-                <h3>María Gómez</h3>
-                <p>Especialidad: Accesorios crochet</p>
-            </div>
+            <?php if (!empty($artistas)): ?>
+                <?php foreach ($artistas as $artista): ?>
 
-            <div class="artist-card">
-                <h3>Sofía Vargas</h3>
-                <p>Especialidad: Ropa artesanal</p>
-            </div>
+                    <a href="ver_artista.php?id=<?php echo $artista['id']; ?>" class="artist-card">
+                        <h3>
+                            <?php echo htmlspecialchars($artista['username'] ?? $artista['username']); ?>
+                        </h3>
+
+                        <p>
+                            Especialidad:
+                            <?php echo htmlspecialchars($artista['especialidad'] ?? 'Artesanía'); ?>
+                        </p>
         </div>
+
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No hay artistas disponibles.</p>
+<?php endif; ?>
+
+</div>
     </section>
 
     <!-- VIDEO -->
@@ -243,16 +301,19 @@ session_start();
 
     <script>
         function verificarSesion(accion) {
-            fetch('../backend/verificar_sesion.php')
+            fetch('../backend/verificar_sesion.php', {
+                    credentials: 'include'
+                })
                 .then(res => res.json())
                 .then(data => {
                     if (data.logueado) {
-                        if (accion === 'producto') {
-                            alert("Aquí iría el producto");
+
+                        if (accion === 'favoritos') {
+                            window.location.href = "favoritos.php";
+                        } else if (accion === 'carrito') {
+                            window.location.href = "carrito.php";
                         }
-                        if (accion === 'favorito') {
-                            alert("Agregado a favoritos ❤️");
-                        }
+
                     } else {
                         alert("Debes iniciar sesión primero");
                         window.location.href = "login.html";
