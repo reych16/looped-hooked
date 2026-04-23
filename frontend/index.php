@@ -4,7 +4,28 @@ session_start();
 <?php
 include("backend/config/conexion.php");
 
-// 📦 Obtener productos (puedes limitar si quieres)
+$contadorPedidos = 0;
+
+if (isset($_SESSION['usuario_id'])) {
+    if ($_SESSION['rol'] === 'cliente') {
+        $stmtPedidos = $conexion->prepare("
+            SELECT COUNT(*)
+            FROM ordenes
+            WHERE cliente_id = ? AND visible_cliente = 1
+        ");
+    } else {
+        $stmtPedidos = $conexion->prepare("
+            SELECT COUNT(*)
+            FROM ordenes
+            WHERE artista_id = ? AND visible_artista = 1
+        ");
+    }
+
+    $stmtPedidos->execute([$_SESSION['usuario_id']]);
+    $contadorPedidos = $stmtPedidos->fetchColumn();
+}
+
+// Obtener productos
 $stmt = $conexion->prepare("
     SELECT p.*, i.ruta 
     FROM productos p
@@ -44,13 +65,14 @@ $artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
 <body class="index-body">
 
     <!-- HEADER -->
-    <header class="site-header">
+    <header class="site-header compact-header">
         <div class="header-left">
-            <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="site-logo">
+            <a href="index.php">
+                <img src="img/Looped&HookedLogo.png" alt="Logo Looped & Hooked" class="site-logo">
+            </a>
         </div>
 
         <form class="header-center" action="catalogo.php" method="GET">
-
             <input
                 type="text"
                 name="busqueda"
@@ -58,23 +80,44 @@ $artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
                 class="search-input">
 
             <button type="submit" class="search-btn">Buscar</button>
-
         </form>
 
-        <div class="header-right">
-            <?php if (isset($_SESSION['username'])): ?>
-                <a href="perfil.php" class="header-link">
-                    Perfil de <?php echo $_SESSION['username']; ?>
-                </a>
-                <a href="backend/logout.php" class="header-link">Cerrar sesión</a>
-            <?php else: ?>
-                <a href="login.html" class="header-link">Mi cuenta</a>
-            <?php endif; ?>
-            <a href="#" class="header-link" onclick="verificarSesion('favorito')">
-                Favoritos
+        <div class="header-right compact-actions">
+
+            <div class="menu-wrapper">
+                <button type="button" class="menu-toggle" onclick="toggleHeaderMenu()">☰</button>
+
+                <div id="headerDropdown" class="header-dropdown">
+                    <a href="index.php">Inicio</a>
+                    <a href="favoritos.php">Favoritos</a>
+                    <a href="carrito.php">Carrito</a>
+
+                    <?php if ($_SESSION['rol'] === 'cliente'): ?>
+                        <a href="mis_pedidos.php">
+                            Mis pedidos
+                            <?php if ($contadorPedidos > 0): ?>
+                                <span class="notif-badge-menu"><?php echo $contadorPedidos; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($_SESSION['rol'] === 'artista'): ?>
+                        <a href="pedidos_artista.php">
+                            Pedidos
+                            <?php if ($contadorPedidos > 0): ?>
+                                <span class="notif-badge-menu"><?php echo $contadorPedidos; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <a href="perfil.php" class="header-link">
+                Perfil de <?php echo $_SESSION['username']; ?>
             </a>
-            <a href="#" class="header-link" onclick="verificarSesion('carrito')">
-                Carrito
+
+            <a href="backend/logout.php" class="header-link logout-btn">
+                Cerrar sesión
             </a>
         </div>
     </header>
@@ -320,6 +363,22 @@ $artistas = $stmtArtistas->fetchAll(PDO::FETCH_ASSOC);
                     }
                 });
         }
+    </script>
+
+    <script>
+        function toggleHeaderMenu() {
+            const menu = document.getElementById("headerDropdown");
+            menu.classList.toggle("show");
+        }
+
+        document.addEventListener("click", function(event) {
+            const wrapper = document.querySelector(".menu-wrapper");
+            const menu = document.getElementById("headerDropdown");
+
+            if (wrapper && !wrapper.contains(event.target)) {
+                menu.classList.remove("show");
+            }
+        });
     </script>
 
 </body>

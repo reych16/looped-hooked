@@ -13,7 +13,7 @@ $id = $_SESSION['usuario_id'];
 // ✅ Preparar y ejecutar la consulta
 $stmt = $conexion->prepare("
     SELECT u.*, a.especialidad, a.costo_materiales, a.costo_mano_obra,
-           a.costo_herramientas, a.costo_empaque, a.disponible
+            a.costo_herramientas, a.costo_empaque, a.disponible
     FROM usuarios u
     LEFT JOIN artistas a ON u.id = a.id
     WHERE u.id = ?

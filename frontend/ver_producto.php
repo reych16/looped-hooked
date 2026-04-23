@@ -13,8 +13,8 @@ $id = $_GET['id'];
 // 📦 Obtener producto + imagen + artista
 $stmt = $conexion->prepare("
     SELECT p.*, i.ruta, u.username,
-           a.costo_materiales, a.costo_mano_obra,
-           a.costo_herramientas, a.costo_empaque
+        a.costo_materiales, a.costo_mano_obra,
+        a.costo_herramientas, a.costo_empaque
     FROM productos p
     LEFT JOIN imagenes_producto i 
         ON p.id = i.producto_id AND i.es_principal = 1
@@ -33,7 +33,7 @@ if (!$producto) {
     exit();
 }
 
-// 🧮 Calcular desglose
+// Calcular desglose
 $tiempo = $producto['tiempo_elaboracion'];
 
 $materiales = $producto['costo_materiales'];
@@ -66,9 +66,7 @@ $total = $producto['precio_total'];
             <a href="#" class="header-link" onclick="verificarSesion('favoritos')">
                 Favoritos
             </a>
-            <a href="#" class="header-link" onclick="verificarSesion('carrito')">
-                Carrito
-            </a>
+            <a href="carrito.php" class="header-link">Carrito</a>
 
             <?php if (isset($_SESSION['username'])): ?>
                 <a href="perfil.php" class="header-link">
@@ -120,24 +118,23 @@ $total = $producto['precio_total'];
 
                 <!-- BOTONES -->
                 <div class="acciones-detalle">
-                    <button class="btn-carrito">Agregar al carrito 🛒</button>
-
-                    <button onclick="agregarFavorito(<?php echo $producto['id']; ?>)">
+                    <form action="backend/agregar_carrito.php" method="POST" class="form-carrito">
+                        <input type="hidden" name="producto_id" value="<?php echo $producto['id']; ?>">
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="btn-carrito">Agregar al carrito 🛒</button>
+                    </form>
+                    <button type="button" onclick="agregarFavorito(<?php echo $producto['id']; ?>)">
                         Agregar a favoritos ❤️
                     </button>
-
                     <a href="catalogo.php" class="btn-volver">← Volver</a>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <script>
         function verificarSesion(accion) {
-            fetch('backend/verificar_sesion.php', {
+            fetch('../backend/verificar_sesion.php', {
                     credentials: 'include'
                 })
                 .then(res => res.json())
@@ -191,7 +188,5 @@ $total = $producto['precio_total'];
                 });
         }
     </script>
-
 </body>
-
 </html>

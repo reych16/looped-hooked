@@ -72,12 +72,10 @@ $categorias = $stmtCat->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="header-right">
             <a href="index.php" class="header-link">Inicio</a>
-            <a href="#" class="header-link" onclick="verificarSesion('favorito')">
+            <a href="#" class="header-link" onclick="verificarSesion('favoritos')">
                 Favoritos
             </a>
-            <a href="#" class="header-link" onclick="verificarSesion('carrito')">
-                Carrito
-            </a>
+            <a href="carrito.php" class="header-link">Carrito</a>
 
             <?php if (isset($_SESSION['username'])): ?>
                 <a href="perfil.php" class="header-link">
@@ -165,6 +163,11 @@ $categorias = $stmtCat->fetchAll(PDO::FETCH_ASSOC);
                             <a href="ver_producto.php?id=<?php echo $prod['id']; ?>" class="product-btn">
                                 Ver producto
                             </a>
+                            <form action="backend/agregar_carrito.php" method="POST" class="form-carrito">
+                                <input type="hidden" name="producto_id" value="<?php echo $prod['id']; ?>">
+                                <input type="number" name="cantidad" value="1" min="1" class="input-cantidad">
+                                <button type="submit" class="product-btn">Agregar al carrito</button>
+                            </form>
                         </div>
 
                     </article>
